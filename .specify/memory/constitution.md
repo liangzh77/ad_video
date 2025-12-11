@@ -1,50 +1,109 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+同步影响报告
+=============
+- 版本变更: 0.0.0 → 1.0.0 (初始制定)
+- 新增原则:
+  - I. 简单优先
+  - II. 单机运行
+  - III. 用户友好
+- 新增章节:
+  - 技术约束
+  - 开发流程
+  - 治理
+- 模板更新状态:
+  - .specify/templates/plan-template.md ✅ 已审查 (符合简单优先原则)
+  - .specify/templates/spec-template.md ✅ 已审查 (用户故事格式适用)
+  - .specify/templates/tasks-template.md ✅ 已审查 (任务结构适用)
+- 延迟项目: 无
+-->
 
-## Core Principles
+# 视频物料整理工具 项目宪法
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+## 核心原则
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### I. 简单优先
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+本项目以功能实现为首要目标，采用最简单直接的技术方案。
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+**强制规则**:
+- 所有功能实现必须选择最简单可行的方案
+- 禁止过度设计：不引入不必要的抽象层、设计模式或框架
+- 不追求性能优化，除非影响基本使用体验
+- 代码可读性优先于"优雅"或"最佳实践"
+- 第三方依赖选择时，优先考虑使用简单、文档完善的库
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+**理由**: 这是一个个人工具项目，目标是快速实现功能并投入使用，而非追求技术完美。
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+### II. 单机运行
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+本应用为纯本地单机应用，所有数据和处理均在本地完成。
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+**强制规则**:
+- 禁止引入网络服务依赖（大模型API除外，因为是用户主动使用的外部工具）
+- 禁止引入数据库服务器，数据存储使用文件系统
+- 所有文件操作必须支持本地文件路径
+- 配置和设置必须保存在本地
+- 应用必须能在无网络环境下运行核心功能
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+**理由**: 简化部署和维护，避免服务依赖带来的复杂性。
 
-## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+### III. 用户友好
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+界面和操作必须直观易用，符合用户的自然操作习惯。
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**强制规则**:
+- 界面文字必须使用中文
+- 文件命名和组织结构必须清晰可理解
+- 操作结果必须有明确的视觉反馈
+- 错误信息必须具体且提供解决建议
+- 常用操作必须可以一键完成
+
+**理由**: 这是一个日常使用的工具，良好的用户体验能提高工作效率。
+
+## 技术约束
+
+**语言与框架**:
+- 使用 Python 作为主要开发语言
+- 桌面界面可选择 PyQt/PySide 或其他简单的 GUI 框架
+- 优先使用 Python 标准库
+
+**文件存储**:
+- 所有项目数据以文件形式存储在用户指定的目录
+- 配置文件使用 JSON 或 YAML 格式
+- 媒体文件保持原始格式
+
+**文档语言**:
+- 所有文档、注释、提交信息使用中文
+- 变量名和函数名可使用英文（遵循 Python 命名规范）
+
+## 开发流程
+
+**代码编写**:
+- 功能实现优先，先让代码跑起来
+- 不强制要求测试驱动开发
+- 测试以手动验证为主，可选自动化测试
+
+**版本控制**:
+- 使用 Git 进行版本管理
+- 提交信息使用中文描述变更内容
+
+**问题处理**:
+- 遇到技术障碍时，优先选择绕过方案而非完美解决
+- 复杂功能可以拆分为多个简单步骤，允许部分手动操作
+
+## 治理
+
+**宪法地位**:
+- 本宪法是项目开发的最高指导原则
+- 所有设计决策必须符合上述核心原则
+- 当原则之间冲突时，按照 I > II > III 的优先级处理
+
+**修订流程**:
+- 宪法修改需要记录修改原因
+- 修改需要更新版本号和日期
+- 版本号遵循语义化版本规范：
+  - 主版本号：原则重大变更或删除
+  - 次版本号：新增原则或章节
+  - 修订号：措辞调整、澄清说明
+
+**Version**: 1.0.0 | **Ratified**: 2025-12-11 | **Last Amended**: 2025-12-11
