@@ -8,6 +8,18 @@ from pathlib import Path
 from typing import Tuple, Optional
 
 
+def _get_video_clip(video_path: str):
+    """获取视频剪辑对象，兼容 moviepy 1.x 和 2.x"""
+    try:
+        # moviepy 2.x
+        from moviepy import VideoFileClip
+        return VideoFileClip(video_path)
+    except ImportError:
+        # moviepy 1.x
+        from moviepy.editor import VideoFileClip
+        return VideoFileClip(video_path)
+
+
 class MediaService:
     """媒体服务类
 
@@ -34,9 +46,7 @@ class MediaService:
             return False, f"视频文件不存在: {video_path}"
 
         try:
-            from moviepy.editor import VideoFileClip
-
-            clip = VideoFileClip(str(video_path))
+            clip = _get_video_clip(str(video_path))
 
             # 确保时间偏移在有效范围内
             if time_offset >= clip.duration:
@@ -76,9 +86,7 @@ class MediaService:
             return False, f"视频文件不存在: {video_path}"
 
         try:
-            from moviepy.editor import VideoFileClip
-
-            clip = VideoFileClip(str(video_path))
+            clip = _get_video_clip(str(video_path))
 
             if clip.audio is None:
                 clip.close()
@@ -108,9 +116,7 @@ class MediaService:
             return None
 
         try:
-            from moviepy.editor import VideoFileClip
-
-            clip = VideoFileClip(str(video_path))
+            clip = _get_video_clip(str(video_path))
             duration = clip.duration
             clip.close()
 
@@ -131,9 +137,7 @@ class MediaService:
             return None
 
         try:
-            from moviepy.editor import VideoFileClip
-
-            clip = VideoFileClip(str(video_path))
+            clip = _get_video_clip(str(video_path))
 
             info = {
                 'duration': clip.duration,

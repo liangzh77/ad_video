@@ -353,6 +353,8 @@ class MainWindow(QMainWindow):
                     )
                     if frame_success:
                         self._update_status("已自动提取头帧")
+                    else:
+                        QMessageBox.warning(self, "提取头帧失败", frame_msg)
 
                     # 自动提取音频
                     audio_path = template_path / f"模板，声音，{template.name}.mp3"
@@ -361,6 +363,8 @@ class MainWindow(QMainWindow):
                     )
                     if audio_success:
                         self._update_status("已自动提取音频")
+                    else:
+                        QMessageBox.warning(self, "提取音频失败", audio_msg)
 
                     self._refresh_file_tree()
                     # 自动预览视频
