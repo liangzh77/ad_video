@@ -233,6 +233,8 @@ class MainWindow(QMainWindow):
 
     def _on_tree_selection_changed(self, node_type, template, project, step, file_path):
         """处理文件树选择变化"""
+        from ui.file_tree import FileTreeWidget
+
         # 更新当前选中状态
         self.current_template = template
         self.current_template_path = template.path if template else None
@@ -240,9 +242,10 @@ class MainWindow(QMainWindow):
         self.current_step = step
 
         # 预览文件或 Prompt
-        if step is not None and step.has_prompt and step.prompt_key:
-            # 如果步骤有 Prompt，显示 Prompt 编辑器
-            self.preview_panel.show_prompt(step.prompt_key)
+        if node_type == FileTreeWidget.TYPE_TEMPLATE_PROMPT:
+            # 模板级别的 Prompt 节点，file_path 参数实际是 prompt_key
+            prompt_key = file_path
+            self.preview_panel.show_prompt(prompt_key)
         elif file_path and Path(file_path).exists():
             self.preview_panel.preview_file(file_path)
         else:
@@ -407,12 +410,9 @@ class MainWindow(QMainWindow):
 
         elif node_type == FileTreeWidget.TYPE_STEP:
             # 拖拽到步骤节点
-            text_extensions = ['.txt', '.md']
             valid_extensions = {
-                'subtitle_prompt': text_extensions,
                 'subtitle': self.SUBTITLE_EXTENSIONS,
                 'voice': self.AUDIO_EXTENSIONS,
-                'frame_prompt': text_extensions,
                 'frame': self.IMAGE_EXTENSIONS,
                 'kling': self.VIDEO_EXTENSIONS,
                 'final': self.VIDEO_EXTENSIONS,

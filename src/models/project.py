@@ -42,16 +42,8 @@ class WorkflowStep:
         return "已完成" if self.is_completed() else "待处理"
 
 
-# 固定的7个流程步骤定义
+# 固定的5个流程步骤定义（prompt 类型放在模板级别）
 WORKFLOW_STEPS = [
-    {
-        'id': 'subtitle_prompt',
-        'name': '字幕prompt',
-        'description': '生成字幕的 Prompt',
-        'expected_filename': '{number}，字幕prompt，{template_name}.txt',
-        'has_prompt': True,
-        'prompt_key': 'subtitle',
-    },
     {
         'id': 'subtitle',
         'name': '字幕',
@@ -67,14 +59,6 @@ WORKFLOW_STEPS = [
         'expected_filename': '{number}，语音，*.mp3',
         'has_prompt': False,
         'prompt_key': None,
-    },
-    {
-        'id': 'frame_prompt',
-        'name': '头帧prompt',
-        'description': '生成头帧的 Prompt',
-        'expected_filename': '{number}，头帧prompt，{template_name}.txt',
-        'has_prompt': True,
-        'prompt_key': 'frame',
     },
     {
         'id': 'frame',

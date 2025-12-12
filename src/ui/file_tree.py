@@ -12,8 +12,10 @@ from PySide6.QtWidgets import (
     QTreeWidgetItem,
     QWidget,
     QVBoxLayout,
+    QMenu,
+    QApplication,
 )
-from PySide6.QtCore import Signal, Qt
+from PySide6.QtCore import Signal, Qt, QUrl, QMimeData
 from PySide6.QtGui import QColor, QBrush, QDragEnterEvent, QDragMoveEvent, QDropEvent
 
 from models.template import Template
@@ -37,6 +39,7 @@ class FileTreeWidget(QTreeWidget):
     # 节点类型常量
     TYPE_TEMPLATE = "template"
     TYPE_TEMPLATE_FILE = "template_file"
+    TYPE_TEMPLATE_PROMPT = "template_prompt"
     TYPE_PROJECT = "project"
     TYPE_STEP = "step"
 
@@ -59,6 +62,9 @@ class FileTreeWidget(QTreeWidget):
         self.setIndentation(20)
         self.setAnimated(True)
         self.setAcceptDrops(True)
+        # 启用右键菜单
+        self.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self.customContextMenuRequested.connect(self._on_context_menu)
         # 放大字体
         font = self.font()
         font.setPointSize(11)
@@ -96,6 +102,21 @@ class FileTreeWidget(QTreeWidget):
 
         self.clear()
         self.templates = templates
+
+        # 添加 Prompt 节点到根级别
+        prompt_types = [
+            ('subtitle', '字幕prompt'),
+            ('frame', '头帧prompt'),
+        ]
+
+        for prompt_key, label in prompt_types:
+            prompt_item = QTreeWidgetItem([label])
+            prompt_item.setData(0, Qt.ItemDataRole.UserRole, {
+                'type': self.TYPE_TEMPLATE_PROMPT,
+                'template': None,
+                'prompt_key': prompt_key,
+            })
+            self.addTopLevelItem(prompt_item)
 
         for template in templates:
             template_item = self._add_template_node(template)
@@ -263,9 +284,7 @@ class FileTreeWidget(QTreeWidget):
         Returns:
             创建的树节点
         """
-        # prompt 类型的步骤直接标记为完成
-        is_prompt_step = step.id.endswith('_prompt')
-        is_done = step.is_completed() or is_prompt_step
+        is_done = step.is_completed()
 
         status_icon = "✓" if is_done else "○"
         display_text = f"{status_icon} {step.name}"
@@ -275,7 +294,7 @@ class FileTreeWidget(QTreeWidget):
 
         item = QTreeWidgetItem([display_text])
 
-        # 未完成的步骤显示灰色（prompt 步骤不显示灰色）
+        # 未完成的步骤显示灰色
         if not is_done:
             item.setForeground(0, QBrush(QColor(153, 153, 153)))
 
@@ -297,8 +316,13 @@ class FileTreeWidget(QTreeWidget):
         project = data.get('project')
         step = data.get('step')
         file_path = data.get('file_path')
+        prompt_key = data.get('prompt_key')
 
-        self.selection_changed.emit(node_type, template, project, step, file_path)
+        # 对于 prompt 节点，将 prompt_key 传递到 file_path 参数位置
+        if node_type == self.TYPE_TEMPLATE_PROMPT:
+            self.selection_changed.emit(node_type, template, project, step, prompt_key)
+        else:
+            self.selection_changed.emit(node_type, template, project, step, file_path)
 
     def _on_item_expanded(self, item: QTreeWidgetItem):
         """处理节点展开事件
@@ -395,3 +419,66 @@ class FileTreeWidget(QTreeWidget):
         self.file_dropped_on_node.emit(
             file_path, node_type, template, project, step, file_type
         )
+
+    def _on_context_menu(self, position):
+        """处理右键菜单"""
+        item = self.itemAt(position)
+        if not item:
+            return
+
+        data = item.data(0, Qt.ItemDataRole.UserRole)
+        if not data:
+            return
+
+        # 获取文件路径
+        file_path = data.get('file_path')
+        if not file_path or not Path(file_path).exists():
+            return
+
+        # 创建右键菜单
+        menu = QMenu(self)
+        copy_action = menu.addAction("复制文件")
+        open_folder_action = menu.addAction("打开所在文件夹")
+
+        # 显示菜单并处理选择
+        action = menu.exec(self.viewport().mapToGlobal(position))
+        if action == copy_action:
+            self._copy_file_to_clipboard(file_path)
+        elif action == open_folder_action:
+            self._open_containing_folder(file_path)
+
+    def _copy_file_to_clipboard(self, file_path: Path):
+        """复制文件到剪贴板
+
+        Args:
+            file_path: 文件路径
+        """
+        clipboard = QApplication.clipboard()
+        mime_data = QMimeData()
+
+        # 设置文件 URL
+        url = QUrl.fromLocalFile(str(file_path))
+        mime_data.setUrls([url])
+
+        clipboard.setMimeData(mime_data)
+
+    def _open_containing_folder(self, file_path: Path):
+        """打开文件所在文件夹
+
+        Args:
+            file_path: 文件路径
+        """
+        import subprocess
+        import sys
+
+        folder_path = file_path.parent
+
+        if sys.platform == 'win32':
+            # Windows: 打开文件夹并选中文件
+            subprocess.run(['explorer', '/select,', str(file_path)])
+        elif sys.platform == 'darwin':
+            # macOS: 打开文件夹并选中文件
+            subprocess.run(['open', '-R', str(file_path)])
+        else:
+            # Linux: 打开文件夹
+            subprocess.run(['xdg-open', str(folder_path)])
