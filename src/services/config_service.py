@@ -178,12 +178,12 @@ class ConfigService:
         prompt_definitions = [
             {
                 'key': 'subtitle',
-                'name': '字幕生成 Prompt',
+                'name': '文案生成 Prompt',
                 'filename': 'subtitle.txt',
             },
             {
                 'key': 'frame',
-                'name': '头帧生成 Prompt',
+                'name': '图片生成 Prompt',
                 'filename': 'frame.txt',
             },
         ]

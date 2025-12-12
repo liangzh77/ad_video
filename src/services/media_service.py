@@ -1,7 +1,7 @@
 """
 媒体服务
 
-负责视频处理相关操作，如提取头帧、音频等。
+负责视频处理相关操作，如提取图片、音频等。
 """
 
 from pathlib import Path
@@ -32,7 +32,7 @@ class MediaService:
         output_path: Path,
         time_offset: float = 0.0
     ) -> Tuple[bool, str]:
-        """从视频提取头帧
+        """从视频提取图片（首帧）
 
         Args:
             video_path: 视频文件路径
@@ -62,11 +62,11 @@ class MediaService:
 
             clip.close()
 
-            return True, f"头帧已保存到: {output_path}"
+            return True, f"图片已保存到: {output_path}"
         except ImportError as e:
             return False, f"缺少依赖库: {e}"
         except Exception as e:
-            return False, f"提取头帧失败: {e}"
+            return False, f"提取图片失败: {e}"
 
     def extract_audio(
         self,

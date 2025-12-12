@@ -20,9 +20,9 @@ class Template:
         name: 模板名称（即文件夹名）
         path: 模板文件夹完整路径
         video_path: 模板视频路径（可选）
-        frame_path: 模板头帧路径（可选）
+        frame_path: 模板图片路径（可选）
         audio_path: 模板音频路径（可选）
-        subtitle_path: 模板字幕路径（可选）
+        subtitle_path: 模板文案路径（可选）
         projects: 该模板下的生成项目列表
     """
     name: str
@@ -38,7 +38,7 @@ class Template:
         return self.video_path is not None and self.video_path.exists()
 
     def has_frame(self) -> bool:
-        """检查是否有头帧图片"""
+        """检查是否有图片"""
         return self.frame_path is not None and self.frame_path.exists()
 
     def has_audio(self) -> bool:
@@ -46,7 +46,7 @@ class Template:
         return self.audio_path is not None and self.audio_path.exists()
 
     def has_subtitle(self) -> bool:
-        """检查是否有字幕文件"""
+        """检查是否有文案文件"""
         return self.subtitle_path is not None and self.subtitle_path.exists()
 
     def get_file_status(self) -> dict:

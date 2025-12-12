@@ -46,9 +46,9 @@ class WorkflowStep:
 WORKFLOW_STEPS = [
     {
         'id': 'subtitle',
-        'name': '字幕',
-        'description': '视频字幕文件',
-        'expected_filename': '{number}，字幕，{template_name}.srt',
+        'name': '文案',
+        'description': '视频文案文件',
+        'expected_filename': '{number}，文案，{template_name}.srt',
         'has_prompt': False,
         'prompt_key': None,
     },
@@ -62,9 +62,9 @@ WORKFLOW_STEPS = [
     },
     {
         'id': 'frame',
-        'name': '头帧',
-        'description': '视频头帧图片',
-        'expected_filename': '{number}，头帧，{template_name}.jpg',
+        'name': '图片',
+        'description': '视频图片',
+        'expected_filename': '{number}，图片，{template_name}.jpg',
         'has_prompt': False,
         'prompt_key': None,
     },

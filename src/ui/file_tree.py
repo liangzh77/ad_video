@@ -105,8 +105,8 @@ class FileTreeWidget(QTreeWidget):
 
         # 添加 Prompt 节点到根级别
         prompt_types = [
-            ('subtitle', '字幕prompt'),
-            ('frame', '头帧prompt'),
+            ('subtitle', '文案prompt'),
+            ('frame', '图片prompt'),
         ]
 
         for prompt_key, label in prompt_types:
@@ -187,9 +187,9 @@ class FileTreeWidget(QTreeWidget):
         # 添加模板文件节点
         file_types = [
             ('video', '模板视频', template.video_path),
-            ('frame', '模板头帧', template.frame_path),
+            ('frame', '模板图片', template.frame_path),
             ('audio', '模板音频', template.audio_path),
-            ('subtitle', '模板字幕', template.subtitle_path),
+            ('subtitle', '模板文案', template.subtitle_path),
         ]
 
         for file_type, label, file_path in file_types:

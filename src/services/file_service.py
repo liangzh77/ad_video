@@ -20,9 +20,9 @@ class FileService:
 
     # 模板文件前缀
     TEMPLATE_VIDEO_PREFIX = "模板，视频，"
-    TEMPLATE_FRAME_PREFIX = "模板，头帧，"
+    TEMPLATE_FRAME_PREFIX = "模板，图片，"
     TEMPLATE_AUDIO_PREFIX = "模板，声音，"
-    TEMPLATE_SUBTITLE_PREFIX = "模板，字幕，"
+    TEMPLATE_SUBTITLE_PREFIX = "模板，文案，"
 
     def __init__(self, data_directory: Optional[Path] = None):
         """初始化文件服务
@@ -279,11 +279,11 @@ class FileService:
 
         # 匹配规则（按顺序匹配，注意 subtitle_prompt 要在 subtitle 之前）
         patterns = [
-            ('subtitle_prompt', f"{number}，字幕prompt"),
-            ('subtitle', f"{number}，字幕"),
+            ('subtitle_prompt', f"{number}，文案prompt"),
+            ('subtitle', f"{number}，文案"),
             ('voice', f"{number}，语音"),
-            ('frame_prompt', f"{number}，头帧prompt"),
-            ('frame', f"{number}，头帧"),
+            ('frame_prompt', f"{number}，图片prompt"),
+            ('frame', f"{number}，图片"),
             ('kling', f"{number}，可灵"),
             ('final', f"{number}，成片"),
         ]

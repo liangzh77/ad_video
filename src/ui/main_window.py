@@ -276,16 +276,16 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, "失败", message)
 
     def _import_template_frame(self, file_path: Path):
-        """导入模板头帧"""
+        """导入模板图片"""
         template_name = self.current_template_path.name
-        new_name = f"模板，头帧，{template_name}{file_path.suffix}"
+        new_name = f"模板，图片，{template_name}{file_path.suffix}"
 
         success, message, _ = self.file_service.copy_and_rename_file(
             file_path, self.current_template_path, new_name
         )
 
         if success:
-            self._update_status(f"头帧已设置: {new_name}")
+            self._update_status(f"图片已设置: {new_name}")
             self._refresh_file_tree()
         else:
             QMessageBox.warning(self, "失败", message)
@@ -306,16 +306,16 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, "失败", message)
 
     def _import_template_subtitle(self, file_path: Path):
-        """导入模板字幕"""
+        """导入模板文案"""
         template_name = self.current_template_path.name
-        new_name = f"模板，字幕，{template_name}{file_path.suffix}"
+        new_name = f"模板，文案，{template_name}{file_path.suffix}"
 
         success, message, _ = self.file_service.copy_and_rename_file(
             file_path, self.current_template_path, new_name
         )
 
         if success:
-            self._update_status(f"字幕已设置: {new_name}")
+            self._update_status(f"文案已设置: {new_name}")
             self._refresh_file_tree()
         else:
             QMessageBox.warning(self, "失败", message)
@@ -349,15 +349,15 @@ class MainWindow(QMainWindow):
                 if success:
                     self._update_status(f"视频已设置: {new_name}")
 
-                    # 自动提取头帧
-                    frame_path = template_path / f"模板，头帧，{template.name}.jpg"
+                    # 自动提取图片
+                    frame_path = template_path / f"模板，图片，{template.name}.jpg"
                     frame_success, frame_msg = self.media_service.extract_first_frame(
                         new_path, frame_path
                     )
                     if frame_success:
-                        self._update_status("已自动提取头帧")
+                        self._update_status("已自动提取图片")
                     else:
-                        QMessageBox.warning(self, "提取头帧失败", frame_msg)
+                        QMessageBox.warning(self, "提取图片失败", frame_msg)
 
                     # 自动提取音频
                     audio_path = template_path / f"模板，声音，{template.name}.mp3"
@@ -379,9 +379,9 @@ class MainWindow(QMainWindow):
 
             elif file_type == 'frame':
                 if suffix not in self.IMAGE_EXTENSIONS:
-                    QMessageBox.warning(self, "提示", "模板头帧需要图片文件")
+                    QMessageBox.warning(self, "提示", "模板图片需要图片文件")
                     return
-                new_name = f"模板，头帧，{template.name}{suffix}"
+                new_name = f"模板，图片，{template.name}{suffix}"
             elif file_type == 'audio':
                 if suffix not in self.AUDIO_EXTENSIONS:
                     QMessageBox.warning(self, "提示", "模板音频需要音频文件")
@@ -389,9 +389,9 @@ class MainWindow(QMainWindow):
                 new_name = f"模板，声音，{template.name}{suffix}"
             elif file_type == 'subtitle':
                 if suffix not in self.SUBTITLE_EXTENSIONS:
-                    QMessageBox.warning(self, "提示", "模板字幕需要字幕文件")
+                    QMessageBox.warning(self, "提示", "模板文案需要文案文件")
                     return
-                new_name = f"模板，字幕，{template.name}{suffix}"
+                new_name = f"模板，文案，{template.name}{suffix}"
             else:
                 return
 
